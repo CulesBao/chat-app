@@ -50,9 +50,9 @@ jobs:
           chmod 600 /tmp/id_rsa
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
-          sudo docker stop ubuntu-chat-app || true
-          sudo docker rm ubuntu-chat-app || true
-          sudo docker run -d -p 3000:3000 --name ubuntu-chat-app --network ubuntu_default \
+          sudo docker stop chat-app || true
+          sudo docker rm chat-app || true
+          sudo docker run -d -p 3000:3000 --name chat-app --network ubuntu_default \
             -e PORT = ${{secrets.PORT}} \
             -e ATLAS_URI = ${{secrets.ATLAS_URI}} \
             ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
