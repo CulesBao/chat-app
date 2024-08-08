@@ -8,10 +8,10 @@ COPY package-lock.json /
 RUN npm install
 
 # tao folder tren container
-WORKDIR /chat-app
+WORKDIR /
 
 # copy source code -> /sgroup tren container
-COPY . /chat-app/
+COPY . .
 
 # chon cong de xuat img
 EXPOSE 3000

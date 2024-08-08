@@ -52,9 +52,9 @@ jobs:
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
           sudo docker stop chat-app || true
           sudo docker rm chat-app || true
-          sudo docker run --name chat-app -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest \
-            -e PORT=${{secrets.PORT}} \
-            -e ATLAS_URI=${{secrets.ATLAS_URI}} \
+          sudo docker run --name chat-app -d -p 3000:3000 \
+            -e PORT=${{ secrets.PORT }} \
+            -e ATLAS_URI=${{ secrets.ATLAS_URI }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
           EOF
         env:
