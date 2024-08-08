@@ -7,7 +7,7 @@ console.log(process.env.ATLAS_URI)
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.ATLAS_URI, {
+        await mongoose.connect('mongodb+srv://baocules:baocules123@chatapp.oxmkt3y.mongodb.net/', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 30000
