@@ -34,22 +34,4 @@ const hashPassword = async(password) => {
     }
 }
 
-const isUserExisted = async(obj) => {
-    try{
-        let username = obj.username
-        const user = await users.findOne({username});
-        console.log(user)
-        if (!user )
-            return false
-        if (await bcrypt.compare(obj.password, user.password))
-            return true
-        else
-            return false
-    }
-    catch (err) {
-        console.log("Error in dbUtils: ", err)
-        throw err
-    }
-}
-
-export default {isEmailExist, isUsernameExist, hashPassword, isUserExisted}
+export default {isEmailExist, isUsernameExist, hashPassword}

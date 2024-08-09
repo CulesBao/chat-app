@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 import users from './users.models.js'
 
 dotenv.config()
-console.log(process.env.ATLAS_URI)
 
 const connectDB = async () => {
     try {
