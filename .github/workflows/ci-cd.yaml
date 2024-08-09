@@ -2,7 +2,7 @@ name: CI/CD pipeline
 
 # Khi xảy ra sự kiện pull request vào nhánh main -> thực hiện
 on:
-  pull_request:
+  push:
     branches:
       - main
 
