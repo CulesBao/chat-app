@@ -14,4 +14,4 @@ app.use('/api/', routes)
 app.listen(process.env.PORT, () => {
     console.log('Server running at localhost:3000')
 })
-// ssh -i "chatapp.pem" ubuntu@ec2-54-237-90-49.compute-1.amazonaws.com
+// ssh -i "chat.pem" ubuntu@ec2-54-162-188-130.compute-1.amazonaws.com
