@@ -1,17 +1,16 @@
 FROM node:18.20.3
+# tao folder tren container
+WORKDIR /chat-app
 
 # sao chep package.json va package-lock.json de lo sau nay build lai container thi do ton thoi gian
-COPY package.json /
-COPY package-lock.json /
+COPY package.json /chat-app
+COPY package-lock.json /chat-app
 
 # tai cac module can thiet de run app
 RUN npm install
 
-# tao folder tren container
-WORKDIR /
-
 # copy source code -> /sgroup tren container
-COPY . .
+COPY . /chat-app/
 
 # chon cong de xuat img
 EXPOSE 3000
