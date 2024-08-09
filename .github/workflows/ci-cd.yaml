@@ -48,13 +48,13 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
           chmod 600 /tmp/id_rsa
+          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} << 'EOF'
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
           sudo docker stop chat-app || true
           sudo docker rm chat-app || true
           sudo docker run --name chat-app -d -p 3000:3000 \
-            -e PORT=${{ secrets.PORT }} \
-            -e ATLAS_URI=${{ secrets.ATLAS_URI }} \
+            --env-file /home/${{ secrets.SERVER_USERNAME }}/.env \
             ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
           EOF
         env:
