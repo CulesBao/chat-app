@@ -23,10 +23,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Build và test image được build ra bởi Docker
-      - name: Build and test image by Docker
+      - name: Run build in container
         run: |
-          sudo docker build -t chat-app .
           sudo docker run chat-app npm run build
+          
+      - name: Test image
+        run: |
+          sudo docker run chat-app npm test
 
       # Push image to Docker Hub
       - name: Push image to Docker Hub

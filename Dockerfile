@@ -15,6 +15,10 @@ RUN cd /chat-app/server && npm install
 # copy source code -> /sgroup tren container
 COPY . /chat-app/
 
+# Chạy build cho client và server
+RUN cd /chat-app/client && npm run build
+RUN cd /chat-app/server && npm run build
+
 # sao chep script start.sh
 COPY start.sh /chat-app/start.sh
 
