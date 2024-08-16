@@ -2,11 +2,13 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './models/db.js'
 import routes from './routes/routes.js'
+import cors from 'cors'
 
 dotenv.config()
 const app = express()
 connectDB()
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', routes)

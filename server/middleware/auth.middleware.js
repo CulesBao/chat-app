@@ -4,6 +4,9 @@ import dbUtils from '../utils/db.utils.js'
 const registerValidation = async (req, res, next) =>{
     try{
         const obj = req.body
+        if (!obj.name || !obj.email ||!obj.username || !obj.password)
+            return res.status(400).json({message: "Please fill the form!"})
+
         if (!regexUtils.onValidEmail(obj.email))
             return res.status(400).json({message: "Invalid email. Email should be example@gmail.com"})
         if (await dbUtils.isEmailExist(obj.email))
@@ -31,6 +34,9 @@ const registerValidation = async (req, res, next) =>{
 const loginValidation = (req, res, next) => {
     try{
         const obj = req.body
+        if (!obj.username || !obj.password)
+            return res.status(400).json({message: "Please fill the form!"})
+
         if (!regexUtils.onValidUsername(obj.username))
             return res.status(400).json({message: "Invalid username. Username include: lowcase letter, numbers, dots, underscores, and it must be 6-16 characters long"})
 

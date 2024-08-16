@@ -5,7 +5,7 @@ const createUser = async(user) => {
     try{
         const newUser = new users(user)
         await newUser.save()
-        return {message: "Register complete!", newUser}
+        return {message: "Register complete!"}
     }
     catch(err){
         console.log("Loi o authService: ", err)
