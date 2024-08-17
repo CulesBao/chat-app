@@ -35,7 +35,7 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chat-app:latest
-
+          
   # Job 2: Deploy lên EC2
   deploy:
     needs: build_and_test
