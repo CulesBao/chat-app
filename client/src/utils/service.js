@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000/api'
+const baseUrl = 'http://baocules.me/api'
 const postRequest = async(url, body) =>{
     const response = await fetch(url, {
         method: "POST",
