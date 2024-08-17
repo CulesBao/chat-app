@@ -26,7 +26,7 @@ jobs:
       - name: Build and test image by Docker
         run: |
           sudo docker build -t chat-app .
-          sudo docker run chat-app npm test
+          sudo docker run chat-app sh -c "cd /chat-app/server && npm test"
 
       # Push image to Docker Hub
       - name: Push image to Docker Hub

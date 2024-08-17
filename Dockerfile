@@ -16,14 +16,17 @@ RUN cd /chat-app/server && npm install
 COPY . /chat-app/
 
 # Chạy build cho client và server
-RUN cd /chat-app/client && npm run build
-RUN cd /chat-app/server && npm run build
+# RUN cd /chat-app/client && npm run build
+# RUN cd /chat-app/server && npm run build
 
 # sao chep script start.sh
 COPY start.sh /chat-app/start.sh
 
 # cho phep script duoc chay
 RUN chmod +x /chat-app/start.sh
+
+# Chạy các bài kiểm tra (test) trong thư mục server
+RUN cd /chat-app/server && npm test
 
 # chon cong de xuat img
 EXPOSE 3000
