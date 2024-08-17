@@ -8,7 +8,11 @@ dotenv.config()
 const app = express()
 connectDB()
 
-app.use(cors());
+app.use(cors({
+    origin: '*',  // Hoặc chỉ định domain cụ thể nếu bạn không muốn cho phép mọi domain
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', routes)
