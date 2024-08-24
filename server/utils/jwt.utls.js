@@ -2,10 +2,23 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const createToken = (username) => {
-    return jwt.sign({username},
+const createToken = (id) => {
+    return jwt.sign(
+                    {id},
                     process.env.JWT_SECRET_KEY, 
-                    {expiresIn: '1m'})
+                    {expiresIn: '1h'}
+                )
 }
 
-export default {createToken}
+const verifyToken = (token) => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return reject(err)
+            }
+            resolve(decoded)
+        })
+    })
+}
+
+export default {createToken, verifyToken}

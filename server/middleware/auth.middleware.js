@@ -27,7 +27,7 @@ const registerValidation = async (req, res, next) =>{
     }
     catch(err){
         console.log("Loi o authMiddleware: ", err)
-        return res.status(400).json({message: "Error: " + err})
+        return res.status(500).json({message: "Error: " + err})
     }
 }
 
@@ -47,9 +47,22 @@ const loginValidation = (req, res, next) => {
     }
     catch(err){
         console.log("Loi o authMiddleware: ", err)
-        return res.status(400).json({message: "Error: " + err})
+        return res.status(500).json({message: "Error: " + err})
+    }
+}
+
+const tokenValidation = async(req, res, next) => {
+    try{
+        const token = req.headers['authorization']
+        if (!token)
+            res.status(403).json({message: "No token"})
+        next()
+    }
+    catch(err){
+        console.log("Loi o authMiddleware: ", err)
+        return res.status(500).json({message: "Error: " + err})
     }
 }
 
 
-export default {loginValidation, registerValidation}
+export default {loginValidation, registerValidation, tokenValidation}

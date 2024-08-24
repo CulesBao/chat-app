@@ -1,27 +1,26 @@
 import authService from '../service/auth.service.js'
-import dbUtils from '../utils/db.utils.js'
-import jwtUtls from '../utils/jwt.utls.js'
 
 const register = async (req, res) => {
     try{
         const user = req.body
-        user.password = await dbUtils.hashPassword(user.password)
-        return (await authService.createUser(user))
+        const response = await authService.createUser(user)
+        const {status, ...respone} = response
+
+        return res.status(status).json(respone)
     }
     catch(err) {
         console.log('Loi o authController: ', err)
-        return res.status(400).json({message: "Error in authController: " + err})
+        return res.status(500).json({message: "Error in authController: " + err})
     }
 }
 
 const login = async(req, res) => {
     try{
-        const obj = req.body
-        const response = await authService.login(obj)
-        if (!response.tf)
-            return res.status(400).json({message: "Wrong username or password. Please try again!"})
-        const token = jwtUtls.createToken(obj.username)
-        return res.status(200).json({message: "Login completed!", id: response.id, token: token})
+        const info = req.body
+        const response = await authService.login(info)
+        const {status, ...respone} = response
+
+        return res.status(status).json(respone)
     }
     catch(err) {
         console.log('Loi o authController: ', err)
@@ -31,11 +30,11 @@ const login = async(req, res) => {
 
 const findUser = async(req, res) => {
     try{
-        const _id = req.params.id
-        const user = await authService.findUser(_id) 
-        if (user)
-            return res.status(200).json({username: user.username, name: user.name})
-        return res.status(400).json({message: "Can't found!"})
+        const id = req.params.id
+        const response = await authService.findUser(id) 
+        const {status, ...respone} = response
+        
+        return res.status(status).json(respone)
     }
     catch(err) {
         console.log('Loi o authController: ', err)
@@ -43,4 +42,19 @@ const findUser = async(req, res) => {
     }
 }
 
-export default {register, login, findUser}
+const token = async(req, res) => {
+    try{
+        const tokenHeader = req.headers['authorization']
+        const tokenH = tokenHeader.split(' ')[1];
+        const response = await authService.token(tokenH)
+        const {status, ...respone} = response
+
+        return res.status(status).json(respone)
+    }
+    catch(err) {
+        console.log('Loi o authController: ', err)
+        return res.status(500).json({message: "Error in authController: " + err})
+    }
+}
+
+export default {register, login, findUser, token}
