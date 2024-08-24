@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import service from '../utils/service.js'
 import { useNavigate } from 'react-router-dom'; 
 
@@ -18,6 +18,8 @@ export const AuthContextProvider = ({ children }) => {
     const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
     const [loginError, setLoginError] = useState(null);
     const [isLoginLoading, setIsLoginLoading] = useState(false);
+
+    const [currentUser, setCurrentUser] = useState(null)
 
     const navigate = useNavigate();  
     
@@ -39,7 +41,7 @@ export const AuthContextProvider = ({ children }) => {
                     if (response.status == 400) {
                         return setRegisterError(response);
                     }
-    
+                    navigate('/login'); 
                     setUser(response);
                 });
     
@@ -64,7 +66,8 @@ export const AuthContextProvider = ({ children }) => {
     
                     if (response.status == 200) {
                         setUser(response);
-                        navigate('/'); 
+                        localStorage.setItem("token", JSON.stringify(response.token))
+                        navigate('/chat'); 
                     } else if (response.status >= 400) {
                         setLoginError(response);
                     }
@@ -80,6 +83,32 @@ export const AuthContextProvider = ({ children }) => {
         });
     }, []);
 
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem("token"))
+        if (token){
+            service.getRequest(`${service.baseUrl}/auth/me`, token)
+            .then((response) => {
+                if (response.status == 200){
+                    setCurrentUser(response.username)
+                    navigate('/chat')
+                }
+                else if (response.status >= 400){
+                    setCurrentUser(null)
+                    localStorage.removeItem("token")
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem("token");
+            });
+        }
+    }, [])
+
+    const logoutUser = useCallback(() => {
+        localStorage.removeItem("token");
+        setCurrentUser(null);
+        navigate('/login');
+    }, [navigate]);
+
     return (
         <AuthContext.Provider value={{ 
             user,
@@ -93,7 +122,10 @@ export const AuthContextProvider = ({ children }) => {
             updateLoginInfo,
             loginUser,
             loginError,
-            isLoginLoading
+            isLoginLoading,
+            currentUser,
+            setCurrentUser, 
+            logoutUser
          }}>
             {children}
         </AuthContext.Provider>
