@@ -6,53 +6,44 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [registerError, setRegisterError] = useState(null)
-    const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+    const [registerError, setRegisterError] = useState(null);
+    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
     const [registerInfo, setRegisterInfo] = useState({
         email: "",
         username: "",
         password: "",
         name: ""
-    })
+    });
     
     const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
     const [loginError, setLoginError] = useState(null);
     const [isLoginLoading, setIsLoginLoading] = useState(false);
 
-    const [currentUser, setCurrentUser] = useState(null)
-
     const navigate = useNavigate();  
     
     const updateRegisterInfo = useCallback((info) => {
-        setRegisterInfo(info)
-    }, [])
+        setRegisterInfo(info);
+    }, []);
     
     const registerUser = useCallback(async (e) => {
         e.preventDefault();
         setIsRegisterLoading(true);
         setRegisterError(null);
         
-        setRegisterInfo((currentInfo) => {
-            
-            service.postRequest(`${service.baseUrl}/auth/register`, JSON.stringify(currentInfo))
-                .then(response => {
-                    setIsRegisterLoading(false);
-    
-                    if (response.status == 400) {
-                        return setRegisterError(response);
-                    }
-                    navigate('/login'); 
-                    setUser(response);
-                });
-    
-            return currentInfo;
-        });
-    }, []);   
+        const response = await service.postRequest(`${service.baseUrl}/auth/register`, JSON.stringify(registerInfo));
+        setIsRegisterLoading(false);
+
+        if (response.status === 400) {
+            setRegisterError(response);
+        } else {
+            navigate('/login'); 
+            setUser(response);
+        }
+    }, [registerInfo, navigate]);   
 
     const updateLoginInfo = useCallback((info) => {
-        setLoginInfo(info)
-    }, [])
-    
+        setLoginInfo(info);
+    }, []);
     const loginUser = useCallback(async (e) => {
         e.preventDefault();
         setIsLoginLoading(true);
@@ -63,16 +54,14 @@ export const AuthContextProvider = ({ children }) => {
             service.postRequest(`${service.baseUrl}/auth/login`, JSON.stringify(currentInfo))
                 .then(response => {
                     setIsLoginLoading(false);
-    
+                    console.log(response);
                     if (response.status == 200) {
-                        setUser(response);
-                        localStorage.setItem("token", JSON.stringify(response.token))
+                        setUser(response.username);
+                        localStorage.setItem("token", JSON.stringify(response.token));
                         navigate('/chat'); 
                     } else if (response.status >= 400) {
                         setLoginError(response);
                     }
-    
-                    setUser(response);
                 })
                 .catch(err => {
                     setIsLoginLoading(false);
@@ -82,32 +71,32 @@ export const AuthContextProvider = ({ children }) => {
             return currentInfo;
         });
     }, []);
-
+    
     useEffect(() => {
-        const token = JSON.parse(localStorage.getItem("token"))
-        if (token){
-            service.getRequest(`${service.baseUrl}/auth/me`, token)
-            .then((response) => {
-                if (response.status == 200){
-                    setCurrentUser(response.username)
-                    navigate('/chat')
-                }
-                else if (response.status >= 400){
-                    setCurrentUser(null)
-                    localStorage.removeItem("token")
+        const token = JSON.parse(localStorage.getItem("token"));
+        if (token) {
+            service.getRequest(`${service.baseUrl}/auth/find-by-token`, token)
+            .then(async (response) => {
+                if (response.status === 200) {
+                    setUser(response.username);
+                } else if (response.status >= 400) {
+                    setUser(null);
+                    localStorage.removeItem("token");
                 }
             })
             .catch(() => {
+                setUser(null);
                 localStorage.removeItem("token");
             });
         }
-    }, [])
+    }, []);
+    
 
     const logoutUser = useCallback(() => {
         localStorage.removeItem("token");
-        setCurrentUser(null);
+        setUser(null);
         navigate('/login');
-    }, [navigate]);
+    }, []);
 
     return (
         <AuthContext.Provider value={{ 
@@ -118,15 +107,12 @@ export const AuthContextProvider = ({ children }) => {
             registerError,
             isRegisterLoading,
             loginInfo,
-            setLoginInfo,
             updateLoginInfo,
             loginUser,
             loginError,
             isLoginLoading,
-            currentUser,
-            setCurrentUser, 
             logoutUser
-         }}>
+        }}>
             {children}
         </AuthContext.Provider>
     );

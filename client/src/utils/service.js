@@ -23,17 +23,23 @@ const postRequest = async(url, body) =>{
 }
 
 const getRequest = async(url, token) =>{
-    const response = await (url, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+    try{
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
-    const data = await response.json()
-    return {
-        status: response.status,
-        ...data
+        const data = await response.json();
+        return {
+            status: response.status,
+            ...data
+        }
+    }
+    catch (error) {
+        console.error('Error during GET request:', error);
+        throw error;
     }
 }
 
