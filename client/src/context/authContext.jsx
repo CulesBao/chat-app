@@ -48,29 +48,31 @@ export const AuthContextProvider = ({ children }) => {
         e.preventDefault();
         setIsLoginLoading(true);
         setLoginError(null);
-        
-        setLoginInfo((currentInfo) => {
-            
-            service.postRequest(`${service.baseUrl}/auth/login`, JSON.stringify(currentInfo))
-                .then(response => {
-                    setIsLoginLoading(false);
-                    console.log(response);
-                    if (response.status == 200) {
-                        setUser(response.username);
-                        localStorage.setItem("token", JSON.stringify(response.token));
-                        navigate('/chat'); 
-                    } else if (response.status >= 400) {
-                        setLoginError(response);
-                    }
-                })
-                .catch(err => {
-                    setIsLoginLoading(false);
-                    setLoginError({ status: 500, message: 'Internal server error' });
-                });
+
+        try {
+            const response = await service.postRequest(`${service.baseUrl}/auth/login`, JSON.stringify(loginInfo));
+            setIsLoginLoading(false);
     
-            return currentInfo;
-        });
-    }, []);
+            if (response.status === 200) {
+                localStorage.setItem("token", JSON.stringify(response.token));
+                
+                const token = JSON.parse(localStorage.getItem("token"));
+                const userResponse = await service.getRequest(`${service.baseUrl}/auth/find-by-token`, token);
+                
+                if (userResponse.status === 200) {
+                    setUser(userResponse.username);
+                    navigate('/chat'); 
+                } else {
+                    setLoginError(userResponse);
+                }
+            } else if (response.status >= 400) {
+                setLoginError(response.message);
+            }
+        } catch (err) {
+            setIsLoginLoading(false);
+            setLoginError({ status: 500, message: err.message });
+        }
+    }, [loginInfo, navigate]);
     
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -90,7 +92,6 @@ export const AuthContextProvider = ({ children }) => {
             });
         }
     }, []);
-    
 
     const logoutUser = useCallback(() => {
         localStorage.removeItem("token");
