@@ -60,7 +60,7 @@ export const AuthContextProvider = ({ children }) => {
                 const userResponse = await service.getRequest(`${service.baseUrl}/auth/find-by-token`, token);
                 
                 if (userResponse.status === 200) {
-                    setUser(userResponse.username);
+                    setUser(userResponse.name);
                     navigate('/chat'); 
                 } else {
                     setLoginError(userResponse);
@@ -80,7 +80,7 @@ export const AuthContextProvider = ({ children }) => {
             service.getRequest(`${service.baseUrl}/auth/find-by-token`, token)
             .then(async (response) => {
                 if (response.status === 200) {
-                    setUser(response.username);
+                    setUser(response.name);
                 } else if (response.status >= 400) {
                     setUser(null);
                     localStorage.removeItem("token");
