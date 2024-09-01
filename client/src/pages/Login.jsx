@@ -24,7 +24,7 @@ const Login = () => {
                     {
                         loginError && (
                         <Alert variant='danger'>
-                                <p>{loginError.message}</p>
+                                <p>{loginError}</p>
                         </Alert>
                         )
                     }

@@ -63,7 +63,7 @@ export const AuthContextProvider = ({ children }) => {
                     setUser(userResponse.name);
                     navigate('/chat'); 
                 } else {
-                    setLoginError(userResponse);
+                    setLoginError(userResponse.message);
                 }
             } else if (response.status >= 400) {
                 setLoginError(response.message);
