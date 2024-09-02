@@ -45,5 +45,4 @@ usersSchema.pre('save', function(next) {
 })
 
 const users = mongoose.model('users', usersSchema)
-
 export default users

@@ -8,6 +8,5 @@ const chatsSchema = new mongoose.Schema(
         timestamps: true
     }
 )
-
 const chats = mongoose.model('chats', chatsSchema)
 export default chats
