@@ -1,4 +1,4 @@
-import authRoutes from './apis/auth.routes.js'
+import authRoutes from './auth.routes.js'
 import express from 'express'
 
 const routes = express.Router()

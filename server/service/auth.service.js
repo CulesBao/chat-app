@@ -63,7 +63,7 @@ const findUser = async (_id) => {
             }
         return {
             status: 200,
-            user
+            username: user.username
         }
     } catch (err) {
         console.log("Error in authService: ", err);
@@ -78,15 +78,15 @@ const token = async (tokenHeader) => {
     try{
         const decoded = await jwtUtls.verifyToken(tokenHeader)
         const id = decoded.id
-        const user = await findUser(id)
-        if (!user)
+        const username = await findUser(id)
+        if (!username)
             return {
             status: 400,
             message: "Error"
             }
         return {
             status: 200,
-            name: user.user.name,
+            username: username.username
         }
     }
     catch (err) {
