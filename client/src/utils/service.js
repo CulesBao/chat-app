@@ -42,5 +42,21 @@ const getRequest = async(url, token) =>{
         throw error;
     }
 }
+const GetRequest = async(url) => {
+    try{
+        const response = await fetch(url, {
+            method: "GET"
+        })
+        const data = await response.json()
+        return {
+            status: data.status,
+            ...data
+        }
+    }
+    catch (error) {
+        console.error('Error during GET request:', error);
+        throw error;
+    }
+}
 
-export default {baseUrl, postRequest, getRequest}
+export default {baseUrl, postRequest, getRequest, GetRequest}
