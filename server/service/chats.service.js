@@ -1,5 +1,5 @@
 import chats from '../models/chats.models.js'
-
+import jwtUtls from '../utils/jwt.utls.js'
 const createChat = async(firstId, secondId) =>{
     try{
         const chat = await chats.findOne({
@@ -28,16 +28,17 @@ const createChat = async(firstId, secondId) =>{
     }
 }
 
-const findUserchats = async(userId) =>{
+const findUserchats = async(token) =>{
     try{
+        const user = await jwtUtls.verifyToken(token)
         const chat = await chats.findOne({
-            members: {$in: [userId]}
+            members: {$in: [user.id]}
         })
-        
+        const members = chat.members.filter(member => member !== user.id)
         return {
             status: 200,
             message: "List",
-            chat
+            members
         }
     }
     catch(err){

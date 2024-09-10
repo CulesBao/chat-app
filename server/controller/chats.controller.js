@@ -15,8 +15,9 @@ const createChat = async(req, res) => {
 }
 const findUserChats = async(req, res) => {
     try{
-        const userId = req.params.userId
-        const response = await chatsService.findUserchats(userId)
+        const headerToken = req.headers.authorization
+        const token = headerToken.split(' ')[1]
+        const response = await chatsService.findUserchats(token)
         let {status, ...data} = response
 
         res.status(status).json(data)

@@ -6,20 +6,20 @@ export const ChatContextProvider = ({children, user}) => {
     const [userChats, setUserChats] = useState(null)
     const [isUserChatsLoading, setIsUserChatsLoading] = useState(false)
     const [userChatsError, setUserChatsError] = useState(null)
-    console.log('user', user);
     useEffect(() => {
         const getUserChats = async () => {
             try {
                 setUserChatsError(null);
                 setIsUserChatsLoading(true);
-                if (user?._id) {
-                    const response = await service.GetRequest(`${service.baseUrl}/chats/create-chat/${user._id}`);
+                let token = localStorage.getItem('token');
+                token = JSON.parse(token);
+                if (token) {
+                    const response = await service.getRequest(`${service.baseUrl}/chats/`, token);
                     setIsUserChatsLoading(false);
-                    console.log('response', response);
                     if (response.status >= 400) {
                         return setUserChatsError(response.message);
                     }
-                    setUserChats(response);
+                    setUserChats(response.members);
                 } else {
                     setIsUserChatsLoading(false);
                 }
