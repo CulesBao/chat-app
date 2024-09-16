@@ -84,9 +84,13 @@ const token = async (tokenHeader) => {
             status: 400,
             message: "Error"
             }
+        const data = {
+            id: user.user._id,
+            name: user.user.name
+        }
         return {
             status: 200,
-            name: user.user.name,
+            data
         }
     }
     catch (err) {

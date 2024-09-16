@@ -37,7 +37,7 @@ export const AuthContextProvider = ({ children }) => {
             setRegisterError(response);
         } else {
             navigate('/login'); 
-            setUser(response);
+            // setUser(response);
         }
     }, [registerInfo, navigate]);   
 
@@ -58,9 +58,8 @@ export const AuthContextProvider = ({ children }) => {
                 
                 const token = JSON.parse(localStorage.getItem("token"));
                 const userResponse = await service.getRequest(`${service.baseUrl}/auth/find-by-token`, token);
-                
                 if (userResponse.status === 200) {
-                    setUser(userResponse.name);
+                    setUser(userResponse.data);
                     navigate('/chat'); 
                 } else {
                     setLoginError(userResponse);
@@ -80,7 +79,7 @@ export const AuthContextProvider = ({ children }) => {
             service.getRequest(`${service.baseUrl}/auth/find-by-token`, token)
             .then(async (response) => {
                 if (response.status === 200) {
-                    setUser(response.name);
+                    setUser(response.data);
                 } else if (response.status >= 400) {
                     setUser(null);
                     localStorage.removeItem("token");

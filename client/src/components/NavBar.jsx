@@ -19,7 +19,7 @@ const NavBar = () => {
                         {user ? (
                             <>
                                 <span className='text-light'>
-                                    {user}
+                                    {user.name}
                                 </span>
                                 <Link 
                                     to='/login' 

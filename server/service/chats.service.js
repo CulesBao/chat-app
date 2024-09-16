@@ -31,14 +31,14 @@ const createChat = async(firstId, secondId) =>{
 const findUserchats = async(token) =>{
     try{
         const user = await jwtUtls.verifyToken(token)
-        const chat = await chats.findOne({
+        const chat = await chats.find({
             members: {$in: [user.id]}
         })
-        const members = chat.members.filter(member => member !== user.id)
+        // console.log("Chat: ", chat)
         return {
             status: 200,
             message: "List",
-            members
+            chat
         }
     }
     catch(err){

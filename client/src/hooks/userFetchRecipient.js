@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
 import service from "../utils/service.js";
-const userFetchRecipientUser = (userId) => {
+const userFetchRecipientUser = (members, user) => {
     const [recipientUser, setRecipientUser] = useState(null)
     const [error, setError] = useState(null)
+
+    const recipientId = members?.find(id => id != user.id)
     useEffect(() => {
         const getUser = async () => {
-            if (!userId) return null;
+            if (!recipientId) return null;
             try {
-                const response = await service.GetRequest(`${service.baseUrl}/auth/find/${userId.userId}`);
-                console.log('response', response);
+                const response = await service.GetRequest(`${service.baseUrl}/auth/find/${recipientId}`);
+                // console.log('response', response);
                 if (response.status >= 400) {
                     setError(response.message);
                 } else {
-                    setRecipientUser(response.user.name);
+                    setRecipientUser(response.user);
                 }
             } catch (err) {
-                setError(err.message);
+                setError(err.message || 'Something went wrong')
             }
         };
         getUser();
-    }, [userId]);
+    }, [recipientId]);
     return {recipientUser, error}
 }
 export default userFetchRecipientUser
