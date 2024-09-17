@@ -6,7 +6,7 @@ const createMessages = async (messageObj) => {
         await newMessage.save()
         return {
             status: 200,
-            message: "Send message successful"
+            message: newMessage
         }
     }
     catch(err){

@@ -4,7 +4,7 @@ const userFetchRecipientUser = (members, user) => {
     const [recipientUser, setRecipientUser] = useState(null)
     const [error, setError] = useState(null)
 
-    const recipientId = members?.find(id => id != user.id)
+    const recipientId = members?.find(id => id != user?.id)
     useEffect(() => {
         const getUser = async () => {
             if (!recipientId) return null;
